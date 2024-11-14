@@ -1,0 +1,15 @@
+{
+  "name": "psychologytimemanagermonolith",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/server.js",
+  "scripts": {
+    "dev": "node --watch src/server.js"
+  },
+  "author": "andre",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.21.1",
+    "pg": "^8.13.1"
+  }
+}

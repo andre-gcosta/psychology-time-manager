@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Psychology Time Manager</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+</head>
+<body>
+    <header id="header-top"><b onclick="goHome()">PsychologyTM</b></header>
+    <nav id="header-nav">
+        <div class="nav-item">
+            <a class="menu-link">Pacientes</a>
+            <div class="dropdown">
+                <a id="general-vision-anchor">Visão Geral</a>
+                <a id="session-vision-anchor">Sessões</a>
+            </div>
+        </div>
+        <div class="nav-item">
+            <a class="menu-link">Agendamentos</a>
+            <div class="dropdown">
+                <a id="calendar-vision-anchor" style="text-decoration: none; color:gray;">Calendários</a>
+                <a id="event-create-anchor" style="text-decoration: none; color:gray;">Agendar Consultas</a>
+            </div>
+        </div>
+    </nav>
+    <main>
+        <section id="patient-general-vision-section" class="patient-general-vision-section">
+            <div class="patient-container">
+                <div class="patient-header">
+                    <input type="text" placeholder="Search for patients..." class="search-input-patients">
+                    <button class="add-button" id="openModalAddPatient">Add Patient</button>
+                </div>
+            
+                <div id="patient-list" class="patient-list">
+
+                </div>
+
+                <div class="modal-patient" id="addPatientModal">
+                    <div class="modal-patient-content">
+                        <span class="close" id="closeModalAddPatient">&times;</span>
+                        <h2>Add Patient</h2>
+                        <form id="patientForm">
+                            <label>
+                                <input type="checkbox" id="quickRegister"> Cadastro Rápido
+                            </label><br>
+                            <label>
+                                <input type="checkbox" name="childAdolescent"> Criança/Adolescente
+                            </label><br>
+                
+                            <label for="name">Name:</label>
+                            <input type="text" id="name" name="name" required><br>
+                
+                            <label for="cpf">CPF:</label>
+                            <input type="text" id="cpf" name="cpf"><br>
+                
+                            <label for="telefone">Telefone:</label>
+                            <select id="ddd" name="ddd">
+                                <option value="">DDD</option>
+                                <option value="11">11</option>
+                                <option value="21">21</option>
+                                <option value="31">31</option>
+                                <option value="51">51</option>
+                                <!-- Add more DDD options as needed -->
+                            </select>
+                            <input type="text" id="telefone" name="telefone" required><br>
+                
+                            <div id="completeFields">
+                                <label for="emergencyContact1">Nome Contato Emergência 1:</label>
+                                <input type="text" id="emergencyContact1" name="emergencyContact1"><br>
+                    
+                                <label for="emergencyPhone1">Telefone Contato Emergência 1:</label>
+                                <input type="text" id="emergencyPhone1" name="emergencyPhone1"><br>
+                    
+                                <label for="emergencyContact2">Nome Contato Emergência 2:</label>
+                                <input type="text" id="emergencyContact2" name="emergencyContact2"><br>
+                    
+                                <label for="emergencyPhone2">Telefone Contato Emergência 2:</label>
+                                <input type="text" id="emergencyPhone2" name="emergencyPhone2"><br>
+                    
+                                <label for="email">Email:</label>
+                                <input type="email" id="email" name="email"><br>
+                    
+                                <label for="dob">Data de Nascimento:</label>
+                                <input type="date" id="dob" name="dob"><br>
+                            </div>
+
+                            <label for="country">País:</label>
+                            <select id="country" name="country">
+                                <option value="">Select País</option>
+                                <option value="br">Brasil</option>
+                                <option value="us">United States</option>
+                                <!-- Add more countries as needed -->
+                            </select><br>
+                
+                            <label for="gender">Gênero:</label>
+                            <select id="gender" name="gender">
+                                <option value="">Select Gênero</option>
+                                <option value="male">Masculino</option>
+                                <option value="female">Feminino</option>
+                                <option value="other">Outro</option>
+                            </select><br>
+                
+                            <label for="profession">Profissão:</label>
+                            <input type="text" id="profession" name="profession"><br>
+                
+                            <label for="healthPlan">Plano de Saúde:</label>
+                            <input type="text" id="healthPlan" name="healthPlan"><br>
+                
+                            <label for="treatment">Tratamento:</label>
+                            <input type="text" id="treatment" name="treatment"><br>
+                
+                            <label for="medication">Medicamento:</label>
+                            <input type="text" id="medication" name="medication"><br>
+                
+                            <label for="quantity">Quantidade:</label>
+                            <input type="number" id="quantity" name="quantity"><br>
+                
+                            <label for="unit">Unidade de Medida:</label>
+                            <select id="unit" name="unit">
+                                <option value="g">g</option>
+                                <option value="mg">mg</option>
+                                <option value="ml">ml</option>
+                                <option value="ui">UI</option>
+                            </select><br>
+                
+                            <button type="submit">Submit</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- View Patient Modal -->
+                <div class="modal-patient-view" id="patient-modal">
+                    <div class="modal-content-patient-view">
+                        <div class="modal-body">
+                            <nav class="side-nav">
+                                <ul>
+                                    <li data-view="profile" class="active">Perfil do Paciente</li>
+                                    <li data-view="sessions" id="modal-patient-view-side-nav-sessions">Sessões do Paciente</li>
+                                    <li data-view="library">Biblioteca do Paciente</li>
+                                </ul>
+                            </nav>
+                            <div class="main-content" id="main-content">
+                                <div id="profile" class="view active">
+                                    <h2>Perfil do Paciente</h2>
+                                    <button id="edit-patient" class="edit-button">Edit Patient</button>
+                                    <button id="save-patient" class="save-button" style="display:none;">Save</button>
+                                    <button id="cancel-edit" class="cancel-button" style="display:none;">Cancel</button>
+                                    <div class="patient-info">
+                                        <div class="form-group">
+                                            <label>Nome completo:</label>
+                                            <input type="text" id="full-name" disabled />
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Email:</label>
+                                            <input type="email" id="email-view" disabled />
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Telefone:</label>
+                                            <input type="text" id="phone-view" disabled />
+                                        </div>
+                                        <div class="contact-links-patient"></div>
+                                        <div class="form-group">
+                                            <label>Nascimento:</label>
+                                            <input type="date" id="birthdate" disabled />
+                                        </div>
+                                        <div class="form-group">
+                                            <label>CPF:</label>
+                                            <input type="text" id="cpf-view" disabled />
+                                        </div>
+                                    </div>
+                                    <div class="general-info">
+                                        <h3>Informações Gerais</h3>
+                                        <div class="form-group">
+                                            <label>Gênero:</label>
+                                            <input type="text" id="gender-view" disabled />
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Profissão:</label>
+                                            <input type="text" id="profession-view" disabled />
+                                        </div>
+                                        <div class="form-group">
+                                            <label>País de Residência:</label>
+                                            <input type="text" id="country-view" disabled />
+                                        </div>
+                                    </div>
+                                    <div class="emergency-contacts">
+                                        <h3>Contatos de Emergência</h3>
+                                        <div class="form-group">
+                                            <label>Nome:</label>
+                                            <input type="text" id="emergency-name-1" disabled />
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Telefone:</label>
+                                            <input type="text" id="emergency-phone-1" disabled />
+                                            <div class="contact-emergency-container-1"></div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Nome:</label>
+                                            <input type="text" id="emergency-name-2" disabled />
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Telefone:</label>
+                                            <input type="text" id="emergency-phone-2" disabled />
+                                            <div class="contact-emergency-container-2"></div>
+                                        </div>
+                                    </div>
+                                    <div class="health-info">
+                                        <h3>Saúde de Tratamento</h3>
+                                        <div class="form-group">
+                                            <label>Planos de Saúde:</label>
+                                            <input type="text" id="health-plans" disabled />
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Tratamentos:</label>
+                                            <input type="text" id="treatments" disabled />
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Medicamentos:</label>
+                                            <input type="text" id="medications" disabled />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="sessions" class="view">
+                                    <h2>Sessões do Paciente</h2>
+                                    <button id="session-for-patient-new-button">Criar Seção</button>
+                                    <div id="sessions-for-patient-container"></div>
+                                </div>
+                                <div id="library" class="view">
+                                    <h2>Biblioteca do Paciente</h2>
+                                    <p>Em breve...</p>
+                                </div>
+                            </div>
+                            <span class="close" id="close-modal-view-patient">&times;</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
+            </div>
+            <div class="calendar-container">
+                <div>
+                    <div>
+                        <button id="add-event">Add Event</button>
+                        <!-- <button id="delete-event">Add Event</button> -->
+                    </div>
+                    <header>
+                        <button id="prev">&lt;</button>
+                        <h1 id="calendar-title"></h1>
+                        <button id="next">&gt;</button>
+                    </header>
+                    <button id="month-view">Month</button>
+                    <button id="week-view">Week</button>
+                    <button id="day-view">Day</button>
+                </div>
+                <div id="calendar"></div>
+                
+                <div class="modal" id="event-modal">
+                    <div class="modal-content">
+                        <h2>Create Event</h2>
+                        <label for="event-name">Name:</label>
+                        <input type="text" id="event-name" placeholder="Nome, email ou CPF..." autocomplete="off"><br>
+                        <ul id="patient-suggestions" class="suggestions-list" style="display: none;"></ul>
+                        
+                        <label for="start-date">Start Date & Time:</label>
+                        <input type="datetime-local" id="start-date"><br>
+                        
+                        <label for="end-date">End Date & Time:</label>
+                        <input type="datetime-local" id="end-date"><br>
+                        
+                        <label for="recurrence">Recurrence:</label>
+                        <!-- <input type="text" id="recurrence" placeholder="Daily, Weekly, etc."><br> -->
+                        <select id="recurrence">
+                            <option value="none">None</option>
+                            <option value="1">Every 1 Week</option>
+                            <option value="2">Every 2 Weeks</option>
+                            <option value="3">Every 3 Weeks</option>
+                            <option value="4">Every 4 Weeks</option>
+                        </select><br>
+        
+                        <label for="duration">Duration:</label>
+                        <input type="number" id="duration" placeholder="Duration in minutes"><br>
+                        
+                        <label for="event-type">Type:</label>
+                        <select id="event-type">
+                            <option value="Presencial">Presencial</option>
+                            <option value="Online">Online</option>
+                        </select><br>
+                        
+                        <label for="event-color">Color:</label>
+                        <input type="color" id="event-color" value="#c75252"><br>
+                        
+                        <label for="notes">Notes:</label>
+                        <textarea id="notes"></textarea><br>
+                        
+                        <button id="save-event">Save Event</button>
+                        <button id="close-modal">Close</button>
+                    </div>
+                </div>
+                <div id="event-modal-view" class="modal">
+                    <div class="modal-content">
+                        <span id="close-modal-view" class="close"><h3>&times;</h3></span>
+                        <h2>Event Details</h2>
+                        <p><strong>Name:</strong> <span id="event-name-display"></span></p>
+                        <p><strong>Start:</strong> <span id="start-date-display"></span></p>
+                        <p><strong>End:</strong> <span id="end-date-display"></span></p>
+                        <p><strong>Presential:</strong> <span id="event-type-display"></span></p>
+                        <p><strong>Notes:</strong> <span id="event-notes-display"></span></p>
+                        <button id="delete-event-view" class="delete-button">Delete Event</button>
+                    </div>
+                </div>
+            </div>
+            <div class="fast-action-container">
+                <button id="fast-action-event" ="folder-button">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon">
+                        <path d="M10 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V10l-8-6z" />
+                    </svg>
+                </button>
+            </div>
+        </section>
+
+        <section id="sessions-general-vision-section" class="sessions-general-vision-section">
+            <div class="session-header">
+                <h1>Prontuário e Anotações</h1>
+                <p>Consulte, crie e edite suas anotações e prontuários</p>
+                <select id="session-options">
+                    <option value="open-existing">Abrir Sessão Existente</option>
+                    <option value="create-new">Criar Nova Sessão</option>
+                </select>
+            </div>
+
+            <!-- For opening an existing session -->
+            <div id="open-session" class="session-view">
+                <input type="text" id="search-patient" placeholder="Busque seu paciente pelo nome ou CPF" />
+                <label for="date-input">Selecione um mês:</label>
+                <input type="date" id="date-input" lang="pt-BR">
+                <button id="show-sessions">Exibir Sessões</button>
+                <div id="list-sessions" class="list-sessions">
+                    <!-- Dynamically display sessions here -->
+                </div>
+            </div>
+        
+            <!-- For creating a new session -->
+            <div id="create-session" class="session-view" style="display: none;">
+                <input type="text" id="search-patient-create" placeholder="Busque seu paciente pelo nome ou CPF" />
+                <ul id="patient-suggestions-create-session" class="suggestions-list" style="display: none;"></ul>
+                <input type="datetime-local" id="session-datetime" placeholder="Selecione data e hora" />
+                <button id="select-now">Selecionar Hora Atual</button>
+                <button id="create-session-btn">Criar Sessão</button>
+            </div>
+        
+            <!-- For modifying a session -->
+            <div id="modify-session" class="session-view" style="display: none;">
+                <label>Paciente Selecionado: <span id="selected-patient">Nome do Paciente</span></label>
+                <label>Data e Hora da Sessão: <span id="session-datetime-display">Data e Hora</span></label>
+                <button id="save-session">Salvar</button>
+            </div>
+            <div id="session-container" class="session-container">
+            </div>            
+
+            <div class="session-content-container">
+                <div class="annotations-container">
+                    <div class="annotation-container">
+                        <h2>Anotações da Sessão</h2>
+                        <div class="toolbar">
+                            <button onclick="formatText('bold')">B</button>
+                            <button onclick="formatText('italic')">I</button>
+                            <button onclick="formatText('underline')">U</button>
+                            <button onclick="formatText('insertOrderedList')">1.</button>
+                            <button onclick="formatText('insertUnorderedList')">•</button>
+                            <button onclick="formatText('justifyLeft')">⟵</button>
+                            <button onclick="formatText('justifyCenter')">|</button>
+                            <button onclick="formatText('justifyRight')">⟶</button>
+                            <select id="heading-select-annotation" onchange="formatHeading('annotation')">
+                                <option value="">Normal</option>
+                                <option value="h1">Heading 1</option>
+                                <option value="h2">Heading 2</option>
+                                <option value="h3">Heading 3</option>
+                                <option value="h4">Heading 4</option>
+                                <option value="h5">Heading 5</option>
+                                <option value="h6">Heading 6</option>
+                            </select>
+                            <button onclick="removeFormat()" disabled>Remover Formatação</button>
+                        </div>
+                        <div id="annotation" class="annotation" contenteditable="true" placeholder="Escreva suas anotações aqui..."></div>
+                    </div>
+                </div>
+                <div class="medical-report-container">
+                    <h2>Prontuário do Paciente</h2>
+                    <div class="toolbar">
+                        <button onclick="formatText('bold')">B</button>
+                        <button onclick="formatText('italic')">I</button>
+                        <button onclick="formatText('underline')">U</button>
+                        <button onclick="formatText('insertOrderedList')">1.</button>
+                        <button onclick="formatText('insertUnorderedList')">•</button>
+                        <button onclick="formatText('justifyLeft')">⟵</button>
+                        <button onclick="formatText('justifyCenter')">|</button>
+                        <button onclick="formatText('justifyRight')">⟶</button>
+                        <select id="heading-select-report" onchange="formatHeading('report')">
+                            <option value="">Normal</option>
+                            <option value="h1">Heading 1</option>
+                            <option value="h2">Heading 2</option>
+                            <option value="h3">Heading 3</option>
+                            <option value="h4">Heading 4</option>
+                            <option value="h5">Heading 5</option>
+                            <option value="h6">Heading 6</option>
+                        </select>
+                        <button onclick="removeFormat()" disabled>Remover Formatação</button>
+                    </div>
+                    <div id="annotation-report" class="annotation" contenteditable="true" placeholder="Escreva suas anotações aqui..."></div>
+                </div>
+            </div>
+
+        </section>
+    </main>
+    <script src="scripts.js"></script>
+</body>
+</html>
