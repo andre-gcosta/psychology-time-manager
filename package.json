@@ -11,5 +11,9 @@
   "dependencies": {
     "express": "^4.21.1",
     "pg": "^8.13.1"
+  },
+  "engines": {
+    "npm": "10.2.3",
+    "node": "v20.10.0"
   }
 }
